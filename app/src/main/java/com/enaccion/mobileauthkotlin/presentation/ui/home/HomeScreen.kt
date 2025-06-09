@@ -58,7 +58,7 @@ fun HomeScreen(navController: NavHostController, viewModel: HomeViewModel = Home
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Button(
-                onClick = { /* Ir a perfil */ },
+                onClick = { navController.navigate("profile") },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color(0xFFF196f3d),
                     contentColor = Color.White

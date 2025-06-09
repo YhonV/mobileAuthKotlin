@@ -12,6 +12,7 @@ import com.enaccion.mobileauthkotlin.presentation.ui.auth.initial.InitialScreen
 import com.enaccion.mobileauthkotlin.presentation.ui.auth.login.LoginScreen
 import com.enaccion.mobileauthkotlin.presentation.ui.auth.signup.SignUpScreen
 import com.enaccion.mobileauthkotlin.presentation.ui.home.HomeScreen
+import com.enaccion.mobileauthkotlin.presentation.ui.profile.ProfileScreen
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -49,6 +50,9 @@ fun NavigationWrapper(navHostController: NavHostController, auth : FirebaseAuth)
         }
         composable("home") {
             HomeScreen(navHostController)
+        }
+        composable("profile") {
+            ProfileScreen(navController = navHostController)
         }
     }
 }
