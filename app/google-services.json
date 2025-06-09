@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "986965192992",
+    "project_id": "mobileauthkotlin",
+    "storage_bucket": "mobileauthkotlin.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:986965192992:android:f63e569bd890a8e558e745",
+        "android_client_info": {
+          "package_name": "com.enaccion.mobileauthkotlin"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAQ2SzLvMOCaHe85OgD9NHoGtYG6oTBMnA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
