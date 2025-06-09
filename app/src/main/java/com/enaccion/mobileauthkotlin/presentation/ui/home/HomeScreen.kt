@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
@@ -20,16 +22,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.enaccion.mobileauthkotlin.presentation.ui.home.components.CustomCard
 import com.enaccion.mobileauthkotlin.presentation.ui.home.components.CustomModal
-import com.enaccion.mobileauthkotlin.presentation.viewmodel.Saving
+import com.enaccion.mobileauthkotlin.presentation.ui.home.interfaces.SavingsAccount
 import com.google.firebase.firestore.FirebaseFirestore
 
 @Composable
-fun HomeScreen(db: FirebaseFirestore){
+fun HomeScreen(viewModel: HomeViewModel = HomeViewModel()){
     var showModal by remember { mutableStateOf(false) }
+    val savings: State<List<SavingsAccount>> = viewModel.savings.collectAsState()
 
     Column (
         modifier = Modifier
@@ -47,7 +49,10 @@ fun HomeScreen(db: FirebaseFirestore){
         horizontalAlignment = Alignment.CenterHorizontally
     ){
         Spacer(Modifier.weight(1f))
-        CustomCard()
+        savings.value.forEach { saving ->
+            CustomCard(nombre = saving.name, saldo = saving.number)
+        }
+
 
         Spacer(Modifier.height(50.dp))
         Button(
@@ -66,21 +71,6 @@ fun HomeScreen(db: FirebaseFirestore){
         onDismiss = { showModal = false },
         onAdd = { }
     )
-}
-
-fun createSaving(db: FirebaseFirestore){
-    val random = (1 .. 10000).random()
-    val saving = Saving(name = "Cuenta de ahorro", number = random)
-    db.collection("savings").add(saving)
-        .addOnSuccessListener {
-            Log.i("HomeScreen", "Exito")
-        }
-        .addOnFailureListener {
-            Log.i("HomeScreen", "Error")
-        }
-        .addOnCompleteListener {
-            Log.i("HomeScreen", "Completado")
-        }
 }
 
 

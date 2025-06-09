@@ -12,7 +12,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
 @Composable
-fun NavigationWrapper(navHostController: NavHostController, auth : FirebaseAuth, db: FirebaseFirestore) {
+fun NavigationWrapper(navHostController: NavHostController, auth : FirebaseAuth) {
     NavHost(navController = navHostController, startDestination = "initial"){
         composable ("initial") {
             InitialScreen (
@@ -31,7 +31,7 @@ fun NavigationWrapper(navHostController: NavHostController, auth : FirebaseAuth,
             SignUpScreen(navController = navHostController, auth = auth)
         }
         composable("home") {
-            HomeScreen(db)
+            HomeScreen()
         }
     }
 }

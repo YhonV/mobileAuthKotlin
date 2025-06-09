@@ -42,7 +42,7 @@ android {
 }
 
 dependencies {
-
+    implementation(libs.firebase.corrutinas)
     implementation(libs.firebase.auth)
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.crashlytics)

@@ -33,6 +33,7 @@ firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics"}
 firebase-auth = { module = "com.google.firebase:firebase-auth-ktx"}
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose"}
 firebase-firestore = { module = "com.google.firebase:firebase-firestore" }
+firebase-corrutinas = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

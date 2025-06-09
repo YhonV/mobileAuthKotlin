@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun CustomCard(){
+fun CustomCard(nombre: String, saldo: Double){
     Card(
         modifier = Modifier
             .size(width = 350.dp, height = 100.dp)
@@ -33,13 +33,13 @@ fun CustomCard(){
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = "Cuenta de ahorro",
+                text = nombre,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF333333)
             )
             Text(
-                text = "Monto: \$0.00",
+                text = "Monto: \$${"%.2f".format(saldo)}",
                 fontSize = 16.sp,
                 color = Color(0xFF666666)
             )

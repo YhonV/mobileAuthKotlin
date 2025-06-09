@@ -20,19 +20,17 @@ import com.google.firebase.ktx.Firebase
 class MainActivity : ComponentActivity() {
     private lateinit var navHostController : NavHostController
     private lateinit var auth : FirebaseAuth
-    private lateinit var db: FirebaseFirestore
 
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         auth = Firebase.auth
-        db = Firebase.firestore
         setContent {
             navHostController = rememberNavController()
             MobileAuthKotlinTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) {
-                    NavigationWrapper(navHostController, auth, db)
+                    NavigationWrapper(navHostController, auth)
                 }
             }
         }
