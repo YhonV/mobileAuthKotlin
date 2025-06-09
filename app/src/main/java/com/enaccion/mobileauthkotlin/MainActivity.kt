@@ -21,6 +21,7 @@ class MainActivity : ComponentActivity() {
     private lateinit var navHostController : NavHostController
     private lateinit var auth : FirebaseAuth
 
+
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

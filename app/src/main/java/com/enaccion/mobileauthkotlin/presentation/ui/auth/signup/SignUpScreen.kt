@@ -19,6 +19,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -28,6 +29,8 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -41,22 +44,35 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.google.firebase.auth.FirebaseAuth
 import com.enaccion.mobileauthkotlin.R
+import com.enaccion.mobileauthkotlin.data.models.SavingsAccount
 import com.enaccion.mobileauthkotlin.ui.theme.Black
 import com.enaccion.mobileauthkotlin.ui.theme.Blue
+import kotlinx.coroutines.launch
 
 @Composable
-fun SignUpScreen(auth: FirebaseAuth, navController: NavController) {
+fun SignUpScreen(navController: NavController, signUpViewModel: SignUpViewModel = SignUpViewModel()) {
 
     var email by remember {
+        mutableStateOf("")
+    }
+
+    var username by remember {
         mutableStateOf("")
     }
 
     var password by remember {
         mutableStateOf("")
     }
+
+    var confirmPassword by remember {
+        mutableStateOf("")
+    }
+
+    val viewModel = remember { SignUpViewModel() }
 
     Column (
         modifier = Modifier
@@ -99,6 +115,40 @@ fun SignUpScreen(auth: FirebaseAuth, navController: NavController) {
             )
         }
         Spacer(modifier = Modifier.height(20.dp))
+
+        /**
+         * Input de nombre de usuario
+         */
+        Text(
+            "Nombre de usuario",
+            color = Color(0xFF3e3e3e),
+            fontWeight = FontWeight.Bold,
+            fontSize = 18.sp
+        )
+        OutlinedTextField(
+            value = username,
+            label = { Text("Usuario")},
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Default.Person,
+                    contentDescription = null,
+                    tint = Color(0xFF666666)
+                )
+            },
+            onValueChange = { username = it },
+            modifier = Modifier.fillMaxWidth(),
+            colors = OutlinedTextFieldDefaults.colors(
+                unfocusedBorderColor = Color(0xFFE0E0E0),
+                focusedBorderColor = Blue,
+                unfocusedLabelColor = Color(0xFF666666),
+                focusedLabelColor = Blue,
+                cursorColor = Blue
+            ),
+            shape = RoundedCornerShape(12.dp),
+            singleLine = true
+        )
+
+        Spacer(Modifier.height(10.dp))
 
         /**
          * Input de email
@@ -178,8 +228,8 @@ fun SignUpScreen(auth: FirebaseAuth, navController: NavController) {
             fontSize = 18.sp
         )
         OutlinedTextField(
-            value = password,
-            onValueChange = { password = it },
+            value = confirmPassword,
+            onValueChange = { confirmPassword = it },
             label = { Text("Contraseña")},
             leadingIcon = {
                 Icon(
@@ -204,15 +254,15 @@ fun SignUpScreen(auth: FirebaseAuth, navController: NavController) {
 
         Button(
             onClick = {
-                auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        // Navegar al home
-                        Log.i("Login", "Login correcto")
-                    } else {
-                        Log.i("Login", "Login incorrecto")
-                        // Mostrar error
-                    }
-                }
+                viewModel.signUp(email, password,
+                    onSuccess = {
+                        viewModel.viewModelScope.launch {
+                            viewModel.createUser(username, email)
+                            navController.navigate("home")
+                        }
+                    },
+                    onFailure = { error -> Log.i("SignUp", error) }
+                )
             },
             modifier = Modifier
                 .fillMaxWidth()

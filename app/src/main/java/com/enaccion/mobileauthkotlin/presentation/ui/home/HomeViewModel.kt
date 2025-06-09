@@ -3,7 +3,8 @@ package com.enaccion.mobileauthkotlin.presentation.ui.home
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.enaccion.mobileauthkotlin.presentation.ui.home.interfaces.SavingsAccount
+import com.enaccion.mobileauthkotlin.data.models.SavingsAccount
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -63,4 +64,10 @@ class HomeViewModel: ViewModel(){
                 Log.i("HomeScreen", "Completado")
             }
     }
+
+    fun signOut() {
+        FirebaseAuth.getInstance().signOut()
+    }
+
+
 }

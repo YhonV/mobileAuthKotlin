@@ -41,6 +41,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.enaccion.mobileauthkotlin.R
+import com.enaccion.mobileauthkotlin.presentation.ui.auth.initial.components.CustomButton
 import com.enaccion.mobileauthkotlin.ui.theme.BackgroundButton
 import com.enaccion.mobileauthkotlin.ui.theme.Black
 import com.enaccion.mobileauthkotlin.ui.theme.Blue
@@ -211,44 +212,3 @@ fun InitialScreen(navigateToLogin: () -> Unit = {}, navigateToSignUp: () -> Unit
     }
 }
 
-@Composable
-fun CustomButton(
-    modifier: Modifier,
-    painter: Painter,
-    title: String,
-    backgroundColor: Color = BackgroundButton,
-    textColor: Color = Color.White,
-    borderColor: Color = ShapeButton
-) {
-    Card(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(56.dp)
-            .padding(horizontal = 32.dp),
-        shape = RoundedCornerShape(28.dp),
-        colors = CardDefaults.cardColors(containerColor = backgroundColor),
-        border = BorderStroke(1.dp, borderColor),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Image(
-                painter = painter,
-                contentDescription = null,
-                modifier = Modifier.size(24.dp)
-            )
-            Spacer(modifier = Modifier.width(12.dp))
-            Text(
-                text = title,
-                color = textColor,
-                fontWeight = FontWeight.Medium,
-                fontSize = 16.sp
-            )
-        }
-    }
-}
