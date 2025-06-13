@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.sp
 fun CustomModal(
     show: Boolean,
     onDismiss: () -> Unit,
-    onAdd: (String) -> Unit
+    onSuccess: (String) -> Unit
 ) {
     if (show) {
         var name by remember { mutableStateOf("") }
@@ -52,8 +52,10 @@ fun CustomModal(
             confirmButton = {
                 TextButton(
                     onClick = {
-                        onAdd(name)
-                        onDismiss()
+                        if (name.isNotBlank()) {
+                            onSuccess(name)
+                            onDismiss()
+                        }
                     }
                 ) {
                     Text("Agregar")

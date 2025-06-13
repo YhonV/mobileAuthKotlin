@@ -42,6 +42,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.play.services.auth)
     implementation(libs.firebase.corrutinas)
     implementation(libs.firebase.auth)
     implementation(platform(libs.firebase.bom))

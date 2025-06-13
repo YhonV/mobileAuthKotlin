@@ -37,32 +37,68 @@ class HomeViewModel: ViewModel(){
     }
 
     suspend fun getAllSavings(): List<SavingsAccount> {
-        return try {
-            db.collection("savings")
-                .get()
-                .await()
-                .documents
-                .mapNotNull { snapshot ->
-                    snapshot.toObject(SavingsAccount::class.java)
-                }
-        } catch (e: Exception){
+        val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
+
+        return if (currentUserId != null) {
+            try {
+                db.collection("users")
+                    .document(currentUserId)
+                    .collection("savings")
+                    .get()
+                    .await()
+                    .documents
+                    .mapNotNull { snapshot ->
+                        snapshot.toObject(SavingsAccount::class.java)?.copy(id = snapshot.id)
+                    }
+            } catch (e: Exception) {
+                Log.e("HomeViewModel", "Error obteniendo savings: ${e.message}")
+                emptyList()
+            }
+        } else {
+            Log.e("HomeViewModel", "Usuario no autenticado")
             emptyList()
         }
     }
 
-    suspend fun createSaving(){
-        val saldo = (100..10000).random() + (0..99).random() / 100.0
-        val saving = SavingsAccount(name = "Banco Santander", number = saldo)
-        db.collection("savings").add(saving)
-            .addOnSuccessListener {
-                Log.i("HomeScreen", "Exito")
-            }
-            .addOnFailureListener {
-                Log.i("HomeScreen", "Error")
-            }
-            .addOnCompleteListener {
-                Log.i("HomeScreen", "Completado")
-            }
+    fun createSaving(accountName: String){
+        val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
+
+        if (currentUserId != null) {
+            val saldo = (100..10000).random() + (0..99).random() / 100.0
+            val saving = SavingsAccount(name = accountName, number = saldo)
+
+            db.collection("users")
+                .document(currentUserId)
+                .collection("savings")
+                .add(saving)
+                .addOnSuccessListener {
+                    getSavings()
+                    Log.i("HomeScreen", "Exito")
+                }
+                .addOnFailureListener {
+                    Log.i("HomeScreen", "Error")
+                }
+        } else {
+            Log.e("HomeScreen", "Usuario no autenticado")
+        }
+    }
+
+    fun deleteSaving(accountId: String){
+        val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
+
+        if (currentUserId != null){
+            db.collection("users")
+                .document(currentUserId)
+                .collection("savings")
+                .document(accountId)
+                .delete()
+                .addOnSuccessListener {
+                    getSavings()
+                }
+                .addOnFailureListener {
+                    Log.e("HomeViewModel", "Error eliminando cuenta")
+                }
+        }
     }
 
     fun signOut() {

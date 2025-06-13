@@ -16,24 +16,69 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.lifecycle.ViewModelProvider
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import android.widget.Toast
+import android.util.Log
+import androidx.compose.material3.Surface
+import com.enaccion.mobileauthkotlin.presentation.ui.auth.login.LoginViewModel
 
 class MainActivity : ComponentActivity() {
-    private lateinit var navHostController : NavHostController
+    private lateinit var navHostController: NavHostController
     private lateinit var auth : FirebaseAuth
+    private lateinit var loginViewModel: LoginViewModel
 
+    private val googleSignInLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+        loginViewModel.handleGoogleSignInResult(
+            task,
+            onSuccess = {
+                // Navegar a home después del éxito
+                navHostController.navigate("home") {
+                    popUpTo("initial") { inclusive = true }
+                }
+                Toast.makeText(this, "¡Bienvenido!", Toast.LENGTH_SHORT).show()
+            },
+            onFailure = { error ->
+                Toast.makeText(this, "Error: $error", Toast.LENGTH_LONG).show()
+                Log.e("GoogleSignIn", "Error: $error")
+            }
+        )
+    }
 
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         auth = Firebase.auth
+        loginViewModel = ViewModelProvider(this)[LoginViewModel::class.java]
+
         setContent {
             navHostController = rememberNavController()
             MobileAuthKotlinTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) {
-                    NavigationWrapper(navHostController, auth)
+                // ¡Adiós al Scaffold aquí!
+                // Directamente llamamos a nuestro navegador principal.
+                Surface(modifier = Modifier.fillMaxSize()) {
+                    NavigationWrapper(
+                        navHostController = navHostController,
+                        auth = auth,
+                        loginViewModel = loginViewModel,
+                        onGoogleSignIn = { initiateGoogleSignIn() }
+                    )
                 }
             }
         }
+    }
+
+
+    private fun initiateGoogleSignIn() {
+        val googleSignInClient = loginViewModel.createGoogleSignInClient(this)
+        googleSignInClient.signOut() // Opcional: forzar selección de cuenta
+
+        val signInIntent = googleSignInClient.signInIntent
+        googleSignInLauncher.launch(signInIntent)
     }
 }

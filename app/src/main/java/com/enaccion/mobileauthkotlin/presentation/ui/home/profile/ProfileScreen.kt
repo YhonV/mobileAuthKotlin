@@ -1,9 +1,8 @@
-package com.enaccion.mobileauthkotlin.presentation.ui.profile
+package com.enaccion.mobileauthkotlin.presentation.ui.home.profile
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -11,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -40,9 +38,9 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.enaccion.mobileauthkotlin.R
 import com.enaccion.mobileauthkotlin.data.models.Users
@@ -50,7 +48,7 @@ import com.enaccion.mobileauthkotlin.ui.theme.Blue
 
 
 @Composable
-fun ProfileScreen(viewModel: ProfileViewModel = ProfileViewModel(), navController: NavHostController){
+fun ProfileScreen(viewModel: ProfileViewModel = viewModel(), navController: NavHostController){
 
     var username by remember {
         mutableStateOf("")
@@ -60,7 +58,7 @@ fun ProfileScreen(viewModel: ProfileViewModel = ProfileViewModel(), navControlle
         mutableStateOf("")
     }
 
-    val user: State<List<Users>> = viewModel.username.collectAsState()
+    val user: State<Users?> = viewModel.username.collectAsState()
 
     Column (
         modifier = Modifier
@@ -111,7 +109,7 @@ fun ProfileScreen(viewModel: ProfileViewModel = ProfileViewModel(), navControlle
         Spacer(modifier = Modifier.height(50.dp))
 
         val userList = user.value
-        if (userList.isNotEmpty()) {
+        if (userList != null) {
             Text(
                 "Nombre de usuario",
                 color = Color.Gray,
@@ -120,7 +118,7 @@ fun ProfileScreen(viewModel: ProfileViewModel = ProfileViewModel(), navControlle
             )
             OutlinedTextField(
                 value = username,
-                label = { Text(userList[0].username) },
+                label = { Text(userList.username) },
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Default.Person,
@@ -147,7 +145,7 @@ fun ProfileScreen(viewModel: ProfileViewModel = ProfileViewModel(), navControlle
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        if (userList.isNotEmpty()) {
+        if (userList != null) {
             Text(
                 "Correo electronico",
                 color = Color.Gray,
@@ -156,7 +154,7 @@ fun ProfileScreen(viewModel: ProfileViewModel = ProfileViewModel(), navControlle
             )
             OutlinedTextField(
                 value = email,
-                label = { Text(userList[0].email) },
+                label = { Text(userList.email) },
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Default.Email,

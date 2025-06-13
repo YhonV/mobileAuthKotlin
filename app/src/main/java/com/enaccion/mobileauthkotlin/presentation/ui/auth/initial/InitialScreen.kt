@@ -146,43 +146,8 @@ fun InitialScreen(navigateToLogin: () -> Unit = {}, navigateToSignUp: () -> Unit
                 color = Color(0xFFE0E0E0),
                 thickness = 1.dp
             )
-            Text(
-                text = " o continúa con ",
-                color = Color(0xFF666666),
-                fontSize = 14.sp
-            )
-            HorizontalDivider(
-                modifier = Modifier.weight(1f),
-                color = Color(0xFFE0E0E0),
-                thickness = 1.dp
-            )
         }
         Spacer(modifier = Modifier.height(16.dp))
-
-        /**
-         * Botón de Google
-         */
-        CustomButton(
-            Modifier.clickable {  },
-            painterResource(id = R.drawable.google),
-            "Continuar con Google",
-            backgroundColor = Color.White,
-            textColor = Color(0xFF333333),
-            borderColor = Color(0xFFE0E0E0)
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-
-        /**
-         * Boton de Buk
-         */
-        CustomButton(
-            Modifier.clickable {  },
-            painterResource(id = R.drawable.buk),
-            "Continuar con Buk",
-            backgroundColor = Black,
-            textColor = Color.White,
-            borderColor = Color(0xFF4A5568)
-        )
 
         /**
          * Iniciar sesión
